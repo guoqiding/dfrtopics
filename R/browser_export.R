@@ -528,10 +528,10 @@ export_browser_metadata <- function (file, meta, zipped, overwrite, index,
         file <- "meta.csv"
     }
     md_txt <- capture.output(
-        meta[is.na(meta)] <- ''
-        con <- file(file, encoding='UTF-8')
-        write.table(meta, con,
-				            quote=TRUE, sep=",",
+        meta[is.na(meta)] <- ''              ## removing NA
+        con <- file(file, encoding='UTF-8')  ## setting encoding as UTF-8
+        write.table(meta, con,               ## saving table as UTF-8
+                    quote=TRUE, sep=",",
                     col.names=FALSE, row.names=FALSE,
                     # d3.csv.* expects RFC 4180 compliance
                     qmethod="double")
@@ -1053,8 +1053,8 @@ browser_model_files <- function (out_dir, vars, id) {
                                "info.json"
                            else
                                paste0("info-", vars[i], ".json"),
-                      meta="meta.csv.zip",
-                      dt="dt.json.zip",
+                      meta="meta.csv",  ## changed to unzipped
+                      dt="dt.json",     ## changed to unzipped
                       tw="tw.json",
                       topic_scaled="topic_scaled.csv")
         files <- lapply(files, function (f) file.path(out_dir, f))
