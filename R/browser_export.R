@@ -6,7 +6,7 @@
 # index: if non-null, assumed to be index.html. txt is stored in a <script>
 # element as a JSON-escaped string, and the element has ID m__DATA__f* where f* is basename(f) without the suffix (so: m__DATA__info, m__DATA__tw, etc.), as expected by dfr-browser's dfb.load_data routine
 
-write_dfb_file <- function (txt, f, zip=TRUE,
+write_dfb_file <- function (txt, f, zip=FALSE,  ## zip changed to FALSE
                        overwrite=FALSE, index=NULL) {
 
     if (getOption("dfrtopics.verbose"))
@@ -40,7 +40,7 @@ write_dfb_file <- function (txt, f, zip=TRUE,
         # the __DATA__ comment
         writeLines(
             c(src[1:(ins - 1)], txt, src[ins:length(src)]),
-            index)
+            index, useBytes=T)   ## setting encoding as UTF-8
 
         blurt("Rewrote ", index, " with ", basename(f), " data")
 
@@ -53,11 +53,11 @@ write_dfb_file <- function (txt, f, zip=TRUE,
             stop(f, " already exists and overwrite=FALSE")
         }
 
-        writeLines(txt, f)
+        writeLines(txt, f, useBytes=T)   ## setting encoding as UTF-8
         f_out <- f
     } else {
         f_temp <- file.path(tempdir(), basename(f))
-        writeLines(txt, f_temp)
+        writeLines(txt, f_temp, useBytes=T)   ## setting encoding as UTF-8
         f_out <- paste0(f, ".zip")
         if (file.exists(f_out)) {
             if (overwrite) {
@@ -528,9 +528,11 @@ export_browser_metadata <- function (file, meta, zipped, overwrite, index,
         file <- "meta.csv"
     }
     md_txt <- capture.output(
-        write.table(meta,
-                    quote=TRUE, sep=",",
-                    col.names=header, row.names=FALSE,
+        meta[is.na(meta)] <- ''
+        con <- file(file, encoding='UTF-8')
+        write.table(meta, con,
+				            quote=TRUE, sep=",",
+                    col.names=FALSE, row.names=FALSE,
                     # d3.csv.* expects RFC 4180 compliance
                     qmethod="double")
     )
