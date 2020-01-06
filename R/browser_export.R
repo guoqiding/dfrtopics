@@ -527,17 +527,22 @@ export_browser_metadata <- function (file, meta, zipped, overwrite, index,
     if (!is.null(index)) {
         file <- "meta.csv"
     }
-    md_txt <- capture.output(
-        meta[is.na(meta)] <- ''              ## removing NA
-        con <- file(file, encoding='UTF-8')  ## setting encoding as UTF-8
-        write.table(meta, con,               ## saving table as UTF-8
-                    quote=TRUE, sep=",",
-                    col.names=FALSE, row.names=FALSE,
-                    # d3.csv.* expects RFC 4180 compliance
-                    qmethod="double")
-    )
-    write_dfb_file(md_txt,
-        file, zip=zipped, overwrite=overwrite, index=index)
+    meta[is.na(meta)] <- ''
+    con <- file(file, encoding='UTF-8')
+    write.table(meta, con,
+                quote=TRUE, sep=",",
+                col.names=FALSE, row.names=FALSE,
+                # d3.csv.* expects RFC 4180 compliance
+                qmethod="double")
+    # md_txt <- capture.output(
+    #     write.table(meta, con,
+    #                 quote=TRUE, sep=",",
+    #                 col.names=FALSE, row.names=FALSE,
+    #                 # d3.csv.* expects RFC 4180 compliance
+    #                 qmethod="double")
+    # )
+    # write_dfb_file(md_txt,
+    #     file, zip=FALSE, overwrite=overwrite, index=index)
 }
 
 #' Export scaled topic coordinates for dfr-browser
