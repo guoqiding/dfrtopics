@@ -494,7 +494,7 @@ export_browser_doc_topics <- function (file, dtm, digits=4,
     }
     write_dfb_file(jsonlite::toJSON(list(i=dtm@i, p=dtm@p, x=dtm@x),
                                     digits=digits),
-        file, zip=zipped, overwrite=overwrite, index=index
+        file, zip=FALSE, overwrite=overwrite, index=index
     )
 }
 
